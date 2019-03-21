@@ -30,6 +30,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         color: "#FFF"
+    },
+
+    headerTitle: {
+        fontSize: 19,
+        color: "#FFF",
+        fontWeight: "bold"
+    },
+    headerColor: {
+        backgroundColor: "#0a54cc"
     }
 });
 

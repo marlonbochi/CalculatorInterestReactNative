@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { createAppContainer } from 'react-navigation';
 import Routes from './routes';
 import "./config/StatusBarConfig";
 
