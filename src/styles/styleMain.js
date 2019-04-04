@@ -13,7 +13,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 5,
         borderWidth: 2,
-        borderColor: "#0a54cc"
+        borderColor: "#0a54cc",
+        paddingLeft: 15,
+        paddingRight: 15
     },
     formInput: {
         marginTop: 15
