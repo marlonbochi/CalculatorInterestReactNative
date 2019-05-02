@@ -49,21 +49,21 @@ const styles = StyleSheet.create({
         flex: 1,
         flexWrap: "wrap",
         alignItems: "center",
-        backgroundColor: "#0a54cc",        
+        borderColor: "#0a54cc",
+        borderWidth: 1,
         margin: 4,
         flexGrow: 0,
         padding: 10,
         flexBasis: 0,
         flexDirection: "row",
         alignItems: "stretch",
-        justifyContent: "space-between",
-        color: "#FFFFFF"
+        justifyContent: "space-between"
     },
     item: {
         
     },
     itemText: {
-        color: "#FFFFFF"
+        color: "#0a54cc"
     }
 });
 
