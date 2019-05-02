@@ -41,6 +41,29 @@ const styles = StyleSheet.create({
     },
     headerColor: {
         backgroundColor: "#0a54cc"
+    },
+    grid: {
+        marginTop: 10
+    },
+    items: {
+        flex: 1,
+        flexWrap: "wrap",
+        alignItems: "center",
+        backgroundColor: "#0a54cc",        
+        margin: 4,
+        flexGrow: 0,
+        padding: 10,
+        flexBasis: 0,
+        flexDirection: "row",
+        alignItems: "stretch",
+        justifyContent: "space-between",
+        color: "#FFFFFF"
+    },
+    item: {
+        
+    },
+    itemText: {
+        color: "#FFFFFF"
     }
 });
 

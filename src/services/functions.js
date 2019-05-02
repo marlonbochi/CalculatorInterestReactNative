@@ -36,10 +36,10 @@ class Functions {
           let added = Math.round(((newValue * (parseInt(valueInterest) / 100)) * 100)) / 100;
           newValue = Math.round((newValue + added) * 100) / 100;
           
-          value.old = valueOld;
-          value.month = index + 1;
-          value.added = added;
-          value.new = newValue;
+          value.old = String(valueOld);
+          value.month = String(index + 1);
+          value.added = String(added);
+          value.new = String(newValue);
 
           valueOld = newValue;
 

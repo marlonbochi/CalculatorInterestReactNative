@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Alert, TextInput } from 'react-native';
+import { Text, View, Alert, TextInput, FlatList, ScrollView, SafeAreaView } from 'react-native';
 import styles from '../styles/styleMain';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Header, Left, Right, Icon, Button, Body, Title } from 'native-base';
@@ -15,17 +15,19 @@ export default class Main extends Component {
     state = {
         valueDeposit: "120000",
         valueInterest: "15",
-        months: "12"
+        months: "12",
+        items: []
     };
 
     calculate = () => { 
         const items = functions.calculateInterests(this.state.valueDeposit, this.state.valueInterest, this.state.months);
         console.log(items);
+        this.setState({"items": items});
     };
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <ScrollView>
                 <Header androidStatusBarColor="#0a54cc" style={styles.headerColor}>
                     <Left>
                         <Button transparent onPress={this.props.navigation.openDrawer}>
@@ -96,8 +98,51 @@ export default class Main extends Component {
                     <TouchableOpacity style={styles.calculateBtn} onPress={this.calculate}>
                         <Text style={styles.calculateBtnText}>Calcular</Text>
                     </TouchableOpacity>
+
+                    {this.state.items.length > 0 ?
+                        (
+                        <SafeAreaView style={styles.grid}>
+                            <View style={styles.items}>
+                                <View style={styles.item}>
+                                    <Text style={styles.itemText}>Mês</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.itemText}>Anterior</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.itemText}>Add</Text>
+                                </View>
+                                <View style={styles.item}>
+                                    <Text style={styles.itemText}>Novo</Text>
+                                </View>
+                            </View>
+                            <FlatList                            
+                                data={this.state.items}
+                                keyExtractor={item => item.month}
+                                renderItem={({ item }) => {
+                                    return (
+                                    <View style={styles.items}>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemText}>{item.month}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemText}>{item.old}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemText}>{item.added}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemText}>{item.new}</Text>
+                                        </View>
+                                    </View>
+                                    );
+                                }}
+                            />
+                        </SafeAreaView>)
+                        : <Text></Text>
+                    }
                 </View>
-            </View >
+            </ScrollView >
         )
     };
 }
