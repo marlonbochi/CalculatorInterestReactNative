@@ -2,6 +2,9 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1
+    },
+    scrollView: {        
         padding: 20
     },
     label: {
@@ -33,7 +36,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#FFF"
     },
-
+    clearBtn: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFFFFF",
+        borderRadius: 5,
+        padding: 8
+    },
+    clearBtnText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#0a54cc"
+    },
     headerTitle: {
         fontSize: 19,
         color: "#FFF",
@@ -42,8 +56,15 @@ const styles = StyleSheet.create({
     headerColor: {
         backgroundColor: "#0a54cc"
     },
+    bodyTitle: {
+        
+    },
     grid: {
-        marginTop: 10
+        marginTop: 10,
+        paddingBottom: 20
+    },
+    gridHistoric: {
+        paddingBottom: 20
     },
     items: {
         flex: 1,
@@ -64,6 +85,11 @@ const styles = StyleSheet.create({
     },
     itemText: {
         color: "#0a54cc"
+    },
+    setHistoricBtn: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFFFFF",
     }
 });
 

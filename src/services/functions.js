@@ -1,59 +1,64 @@
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import Values from "../Models/Values";
 
-
 class Functions {
+  async saveHistoric(arrayHistorcic) {
+    const stringHistorical = await AsyncStorage.getItem("historical");
+    let arrayHistorical = JSON.parse(stringHistorical) || [];
 
-    async saveHistoric(arrayHistorcic) {
+    arrayHistorical.push(arrayHistorcic);
 
-        const stringHistorical = await AsyncStorage.getItem('historical');
-        let arrayHistorical = JSON.parse(stringHistorical);
+    try {
+      await AsyncStorage.setItem("historical", JSON.stringify(arrayHistorical));
+    } catch (error) {
+      // Error saving data
+    }
+  }
 
-        arrayHistorcic.push(arrayHistorcic);
+  async getHistorical() {
+    return await AsyncStorage.getItem("historical");
+  }
 
-        _storeData = async () => {
-            try {
-              await AsyncStorage.setItem('', JSON.stringify(historical));
-            } catch (error) {
-              // Error saving data
-            }
-          };
+  async eraseHistorico() {
+    return await AsyncStorage.clear();
+  }
+
+  calculateInterests(valueDeposit, valueInterest, months) {
+    let valueOld = this.integerToFloat(valueDeposit);
+    let newValue = this.integerToFloat(valueDeposit);
+
+    const items = new Array();
+
+    this.saveHistoric({
+      valueDeposit: valueDeposit,
+      valueInterest: valueInterest,
+      months: months
+    });
+
+    for (let index = 0; index < parseInt(months); index++) {
+      const value = new Values();
+      let added =
+        Math.round(newValue * (parseInt(valueInterest) / 100) * 100) / 100;
+      newValue = Math.round((newValue + added) * 100) / 100;
+
+      value.old = String(valueOld);
+      value.month = String(index + 1);
+      value.added = String(added);
+      value.new = String(newValue);
+
+      valueOld = newValue;
+
+      items.push(value);
     }
 
-    async getHistorical() {
-        const stringHistorical = await AsyncStorage.getItem('historical');
-        return JSON.parse(stringHistorical);
-    }
+    return items;
+  }
 
-    calculateInterests(valueDeposit, valueInterest, months) {
-        let valueOld = this.integerToFloat(valueDeposit);
-        let newValue = this.integerToFloat(valueDeposit);
+  integerToFloat(value) {
+    const valueFloat = parseFloat(value.replace(/[^\d]+/g, ""));
 
-        const items = new Array();        
-        
-        for (let index = 0; index < parseInt(months); index++) {
-          const value = new Values();
-          let added = Math.round(((newValue * (parseInt(valueInterest) / 100)) * 100)) / 100;
-          newValue = Math.round((newValue + added) * 100) / 100;
-          
-          value.old = String(valueOld);
-          value.month = String(index + 1);
-          value.added = String(added);
-          value.new = String(newValue);
-
-          valueOld = newValue;
-
-          items.push(value);
-        }
-
-        return items;
-    }
-
-    integerToFloat(value) {
-        const valueFloat = parseFloat(value);
-
-        return valueFloat / 100;
-    }
+    return valueFloat / 100;
+  }
 }
 
 const functions = new Functions();

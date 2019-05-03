@@ -1,33 +1,55 @@
+/** Imports */
 import React, { Component } from 'react';
 import { Text, View, Alert, TextInput, FlatList, ScrollView, SafeAreaView } from 'react-native';
 import styles from '../styles/styleMain';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Header, Left, Right, Icon, Button, Body, Title } from 'native-base';
-import { TextInputMask } from 'react-native-masked-text'
+import { TextInputMask } from 'react-native-masked-text';
+import Toast, {DURATION} from 'react-native-easy-toast';
 import functions from '../services/functions';
+/** Imports */
 
 
 export default class Main extends Component {
+
     static navigationOptions = {
         title: 'Início'
     };
 
     state = {
-        valueDeposit: "120000",
-        valueInterest: "15",
-        months: "12",
+        valueDeposit: "",
+        valueInterest: "",
+        months: "",
         items: []
     };
 
-    calculate = () => { 
+    componentDidUpdate({ navigation }) {        
+        // this.setState(
+        //     {
+        //         "valueDeposit": navigation.getParam('valueDeposit', ''),
+        //         "valueInterest": navigation.getParam('valueInterest', ''),
+        //         "months": navigation.getParam('months', '')
+        //     }
+        // );
+
+        // if (this.state.valueInterest == "") {
+        //     this.calculate();
+        // }
+    }
+
+    calculate = () => {
+        if (this.state.valueDeposit.replace(/[^\d]+/g,'') == 0 || this.state.valueInterest == 0 || this.state.months == 0) {
+            this.refs.toast.show('Preencha todos os campos', 1500);
+            this.setState({"items": []});
+            return false;
+        }
         const items = functions.calculateInterests(this.state.valueDeposit, this.state.valueInterest, this.state.months);
-        console.log(items);
         this.setState({"items": items});
     };
 
     render() {
         return (
-            <ScrollView>
+            <View style={styles.container}>
                 <Header androidStatusBarColor="#0a54cc" style={styles.headerColor}>
                     <Left>
                         <Button transparent onPress={this.props.navigation.openDrawer}>
@@ -35,11 +57,11 @@ export default class Main extends Component {
                         </Button>
                     </Left>
                     <Body style={styles.bodyTitle}>
-                        <Title style={ styles.headerTitle }>Calc. de juros</Title>
+                        <Title style={ styles.headerTitle }>Calculadora</Title>
                     </Body>
                     <Right />
                 </Header>
-                <View style={styles.container}>
+                <ScrollView style={styles.scrollView}>
                     <View>
                         <Text style={styles.label}>Valor depositado</Text>
                         <TextInputMask
@@ -62,12 +84,11 @@ export default class Main extends Component {
                         />
                     </View>
                     <View style={styles.formInput}>
-                        <Text style={styles.label}>Juros por mês</Text>
+                        <Text style={styles.label}>Juros por mês %</Text>
                         <TextInputMask style={styles.input}
                             type={'custom'}
                             options={{
-                                mask: '99',
-                                unit: '% '
+                                mask: '99'
                             }}
                             value={this.state.valueInterest}
                             onChangeText={text => {
@@ -141,8 +162,9 @@ export default class Main extends Component {
                         </SafeAreaView>)
                         : <Text></Text>
                     }
-                </View>
-            </ScrollView >
+                </ScrollView>
+                <Toast ref="toast" position="bottom" />
+            </View >
         )
     };
 }
