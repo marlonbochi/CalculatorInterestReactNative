@@ -15,6 +15,7 @@
     "react-native-easy-toast": "^1.2.0",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-masked-text": "^1.11.1",
+    "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.5.1"
   },
   "devDependencies": {

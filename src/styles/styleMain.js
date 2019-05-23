@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#0a54cc"
     },
     bodyTitle: {
-        
+        paddingLeft: 15
     },
     grid: {
         marginTop: 10,

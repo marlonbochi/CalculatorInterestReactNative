@@ -6,66 +6,70 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Header, Left, Right, Icon, Button, Body, Title } from 'native-base';
 import { TextInputMask } from 'react-native-masked-text';
 import Toast, {DURATION} from 'react-native-easy-toast';
+import { NavigationEvents } from 'react-navigation';
 import functions from '../services/functions';
+
 /** Imports */
 
 
 export default class Main extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.valueDeposit = "";
+        this.valueInterest = "";
+        this.months = "";
+        this.items = [];
+
+        this.state = { refresh: false };
+    }
+
     static navigationOptions = {
         title: 'Início'
     };
 
-    state = {
-        valueDeposit: "",
-        valueInterest: "",
-        months: "",
-        items: []
+    getHistoricInfo() {
+
+        if (this.props.navigation.getParam("valueDeposit", "") != "") {
+
+            this.valueDeposit = this.props.navigation.getParam("valueDeposit", "");
+            this.valueInterest = this.props.navigation.getParam("valueInterest", "");
+            this.months = this.props.navigation.getParam("months", "");
+            
+            this.calculate(false);
+        }
     };
 
-    componentDidUpdate({ navigation }) {        
-        // this.setState(
-        //     {
-        //         "valueDeposit": navigation.getParam('valueDeposit', ''),
-        //         "valueInterest": navigation.getParam('valueInterest', ''),
-        //         "months": navigation.getParam('months', '')
-        //     }
-        // );
-
-        // if (this.state.valueInterest == "") {
-        //     this.calculate();
-        // }
-    }
-
-    calculate = () => {
-        if (this.state.valueDeposit.replace(/[^\d]+/g,'') == 0 || this.state.valueInterest == 0 || this.state.months == 0) {
+    calculate(save){
+        if (this.valueDeposit.replace(/[^\d]+/g,'') == 0 || this.valueInterest == 0 || this.months == 0) {
             this.refs.toast.show('Preencha todos os campos', 1500);
-            this.setState({"items": []});
+            this.items = [];
             return false;
         }
-        const items = functions.calculateInterests(this.state.valueDeposit, this.state.valueInterest, this.state.months);
-        this.setState({"items": items});
+        const items = functions.calculateInterests(this.valueDeposit, this.valueInterest, this.months, save);
+        this.items = items;
+
+        if (save) {
+            this.setState({refresh: !this.state.refresh});
+        }
     };
 
     render() {
         return (
             <View style={styles.container}>
-                <Header androidStatusBarColor="#0a54cc" style={styles.headerColor}>
-                    <Left>
-                        <Button transparent onPress={this.props.navigation.openDrawer}>
-                            <Icon name='menu'/>
-                        </Button>
-                    </Left>
+                <NavigationEvents onDidFocus={this.getHistoricInfo()} />
+                <Header androidStatusBarColor="#0a54cc" style={styles.headerColor}>                    
                     <Body style={styles.bodyTitle}>
                         <Title style={ styles.headerTitle }>Calculadora</Title>
                     </Body>
-                    <Right />
                 </Header>
                 <ScrollView style={styles.scrollView}>
                     <View>
                         <Text style={styles.label}>Valor depositado</Text>
                         <TextInputMask
                             style={styles.input}
+                            ref="valueDeposit"
                             type={'money'}
                             options={{
                                 precision: 2,
@@ -74,11 +78,9 @@ export default class Main extends Component {
                                 suffixUnit: '',
                                 unit: 'R$ '
                             }}
-                            value={this.state.valueDeposit}
+                            value={this.valueDeposit}
                             onChangeText={text => {
-                                this.setState({
-                                    valueDeposit: text
-                                })
+                                this.valueDeposit = text
                             }}
                             keyboardType="numeric"
                         />
@@ -90,11 +92,9 @@ export default class Main extends Component {
                             options={{
                                 mask: '99'
                             }}
-                            value={this.state.valueInterest}
+                            value={this.valueInterest}
                             onChangeText={text => {
-                                this.setState({
-                                    valueInterest: text
-                                })
+                                this.valueInterest = text
                             }}
                             keyboardType="numeric"
                         />
@@ -106,21 +106,19 @@ export default class Main extends Component {
                             options={{
                                 mask: '99'
                             }}
-                            value={this.state.months}
+                            value={this.months}
                             onChangeText={text => {
-                                this.setState({
-                                    months: text
-                                })
+                                this.months = text
                             }}
                             keyboardType="numeric"
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.calculateBtn} onPress={this.calculate}>
+                    <TouchableOpacity style={styles.calculateBtn} onPress={() => { this.calculate(true); }}>
                         <Text style={styles.calculateBtnText}>Calcular</Text>
                     </TouchableOpacity>
 
-                    {this.state.items.length > 0 ?
+                    {this.items.length > 0 ?
                         (
                         <SafeAreaView style={styles.grid}>
                             <View style={styles.items}>
@@ -138,7 +136,8 @@ export default class Main extends Component {
                                 </View>
                             </View>
                             <FlatList                            
-                                data={this.state.items}
+                                data={this.items}
+                                extraData={this.state.refresh}
                                 keyExtractor={item => item.month}
                                 renderItem={({ item }) => {
                                     return (

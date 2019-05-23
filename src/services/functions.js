@@ -23,17 +23,19 @@ class Functions {
     return await AsyncStorage.clear();
   }
 
-  calculateInterests(valueDeposit, valueInterest, months) {
+  calculateInterests(valueDeposit, valueInterest, months, save = true) {
     let valueOld = this.integerToFloat(valueDeposit);
     let newValue = this.integerToFloat(valueDeposit);
 
     const items = new Array();
 
-    this.saveHistoric({
-      valueDeposit: valueDeposit,
-      valueInterest: valueInterest,
-      months: months
-    });
+    if(save) {
+      this.saveHistoric({
+        valueDeposit: valueDeposit,
+        valueInterest: valueInterest,
+        months: months
+      });
+    }
 
     for (let index = 0; index < parseInt(months); index++) {
       const value = new Values();

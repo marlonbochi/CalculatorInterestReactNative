@@ -65,11 +65,6 @@ export default class Historic extends Component {
     return (
       <View style={{ flex: 1 }}>
         <Header androidStatusBarColor="#0a54cc" style={styles.headerColor}>
-            <Left>
-                <Button transparent onPress={this.props.navigation.openDrawer}>
-                <Icon name="menu" />
-                </Button>
-            </Left>
             <Body style={styles.bodyTitle}>
                 <Title style={styles.headerTitle}>Histórico</Title>
             </Body>
@@ -95,7 +90,6 @@ export default class Historic extends Component {
               </View>
               <FlatList
                 data={this.state.historical}
-                keyExtractor={item => item.months}
                 renderItem={({ item }) => {
                   return (
                     <View style={styles.items} >
